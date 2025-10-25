@@ -24,21 +24,45 @@ fun move(field : MutableList<Char>, count : Int) {
     println("Please enter coordinates separated by spaces.")
     print("> ")
 
-    val coordinates = readln().split(" ")
-    val x = coordinates[0].toIntOrNull()
-    val y = coordinates[1].toIntOrNull()
+    val newCoordinate = getCoordinates(field)
 
-    if (x == null || y == null) return
-
-    val newCoordinate = (x - 1) * 3 + (y - 1)
-
-    if (field[newCoordinate] != '_') {
-        return
-    } else  if (count % 2 == 0){
+    if (count % 2 == 0){
         field[newCoordinate] = 'X'
     } else {
         field[newCoordinate] = 'O'
     }
+}
+
+fun getCoordinates(field : MutableList<Char>) : Int {
+    var state = true
+    var newCoordinate = -1
+    do {
+        val coordinates = readln().split(" ")
+        if (coordinates.size != 2) {
+            println("Incorrect data entry, try again \n> ")
+            continue
+        }
+        val x = coordinates[0].toIntOrNull()
+        val y = coordinates[1].toIntOrNull()
+
+        if (x == null || y == null || x !in 0..8 || y !in 0..8) {
+            println("Incorrect data entry, try again \n> ")
+            continue
+        }
+
+        newCoordinate = (x - 1) * 3 + (y - 1)
+
+        if (field[newCoordinate] != '_') {
+            println("Incorrect data entry, try again")
+            print("> ")
+            continue
+        } else {
+            state = false
+        }
+
+    } while (state)
+
+    return newCoordinate
 }
 
 fun stateGame(field : MutableList<Char>) : Boolean {
